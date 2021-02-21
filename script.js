@@ -1,4 +1,6 @@
-const createTodo = function() {
+const createTodo = function(todo) {
+  console.log(`createTodo() ---`)
+  console.log(todo)
   $.ajax({
     type: 'POST',
     url: 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=302',
@@ -6,11 +8,13 @@ const createTodo = function() {
     dataType: 'json',
     data: JSON.stringify({
       task: {
-        content: 'Finish to do list'
+        content: todo
       }
     }),
     success: function (response, textStatus) {
       console.log(response);
+      $('#inputBox').val(' ')
+      getTodos()
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
@@ -52,6 +56,17 @@ const getTodos = function() {
     }
   });
 }
+
+$('#inputBox').keypress(function(event){
+  console.log(`keypress`)
+  console.log($(this).val())
+  if (event.keyCode == 13 || event.which == 13) {
+    console.log(`enter pressed`)
+    event.preventDefault()
+    let formText = $(this).val()
+    createTodo(formText)
+  }
+})
 
 $('document').ready(function() {
   // createTodo()
