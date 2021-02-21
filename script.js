@@ -18,6 +18,24 @@ const createTodo = function() {
   });
 }
 
+const buildTodoList = function(tasks) {
+  let html = ''
+  console.log(tasks)
+  let li = ''
+  tasks.forEach(task => {
+    console.log(task)
+    li = 
+    `<li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="${task.id}">
+        <label class="custom-control-label" for="${task.id}">${task.content}</label>
+      </div>
+     </li>`
+     html += li
+  })
+  $('#list').html(html)
+}
+
 const getTodos = function() {
   console.log(`getTodos()`)
   $.ajax({
@@ -27,6 +45,7 @@ const getTodos = function() {
     success: function (response, textStatus) {
       console.log(response);
       // response is a parsed JavaScript object instead of raw JSON
+      buildTodoList(response.tasks)
     },
     error: function (request, textStatus, errorMessage) {
       console.log(errorMessage);
