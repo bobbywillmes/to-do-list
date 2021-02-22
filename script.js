@@ -151,6 +151,44 @@ $('#list').on('click', 'input', function(event) {
     })
 })
 
+const filterTodos = function(option) {
+  console.log(`filterTodos() ${option}`)
+  if(option == 'all') {
+    $('#list li').each(function() {
+      $(this).removeClass('d-none')
+    })
+  }
+  if(option == 'active') {
+    $('#list li').each(function() {
+      $(this).removeClass('d-none')
+      if($(this).find('input').prop('checked') == true) {
+        $(this).addClass('d-none')
+      }
+    })
+  }
+  if(option == 'completed') {
+    $('#list li').each(function() {
+      $(this).removeClass('d-none')
+      if($(this).find('input').prop('checked') == false) {
+        $(this).addClass('d-none')
+      }
+    })
+  }
+
+}
+
+$('#filter button').on('click', function() {
+  console.log(`#filter button click`)
+  console.log($(this))
+  let option = $(this).attr('data-label')
+  console.log(option)
+  let allButtons = $('#filter').find('.btn')
+  console.log(allButtons)
+  allButtons.removeClass('selected')
+  $(this).addClass('selected')
+  filterTodos(option)
+})
+
 $('document').ready(function() {
   getTodos()
 })
