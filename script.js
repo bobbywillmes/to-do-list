@@ -24,12 +24,18 @@ const buildTodoList = function(tasks) {
   let html = ''
   console.log(tasks)
   let li = ''
+  let checked
   tasks.forEach(task => {
     console.log(task)
+    if(task.completed === true) {
+      checked = 'checked'
+    } else {
+      checked = ''
+    }
     li = 
     `<li class="list-group-item">
       <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="${task.id}">
+        <input type="checkbox" class="custom-control-input" id="${task.id}" ${checked}>
         <label class="custom-control-label" for="${task.id}">${task.content}</label>
       </div>
       <i class="far fa-times-circle delete"></i>
@@ -94,6 +100,54 @@ $('#list').on('click', '.delete', function() {
     .then(response => {
       console.log(response)
       li.remove()
+    })
+})
+
+const completeTodo = function(id, isComplete) {
+  console.log(`completeTodo ${id}  ${isComplete}`)
+  let url
+  if(isComplete === true) {
+    url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}/mark_complete?api_key=302`
+  } else {
+    url = `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}/mark_active?api_key=302`
+  }
+  let promise = new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'PUT',
+      url: url,
+      success: function (response, textStatus) {
+        resolve(response)
+        getTodos()
+      },
+      error: function (request, textStatus, errorMessage) {
+        console.log(errorMessage);
+      }
+    });
+  })
+  return promise
+}
+
+$('#list').on('click', 'input', function(event) {
+  console.log(`checkbox click`)
+  console.log(this)
+
+  console.log($(this).prop('checked'))
+  // event.preventDefault()
+  let li = $(this).parent()
+  console.log(li)
+  let input = li.find('input')
+  let id = input.attr('id')
+  console.log(id)
+  let isComplete
+  if($(this).prop('checked')) {
+    isComplete = true
+  } else {
+    isComplete = false
+  }
+  completeTodo(id, isComplete)
+    .then(response => {
+      console.log(`task completed`)
+      console.log(response)
     })
 })
 
