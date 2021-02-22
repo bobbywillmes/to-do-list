@@ -5,3 +5,18 @@ body {
 #form form {
   width: 100%;
 }
+
+#list li div {
+  display: inline-block;
+}
+
+#list li .delete {
+  position: absolute;
+  right: 10px;
+  top: 40%;
+  color: #fff;
+}
+
+#list li:hover .delete {
+  color: #999;
+}

@@ -1,6 +1,4 @@
 const createTodo = function(todo) {
-  console.log(`createTodo() ---`)
-  console.log(todo)
   $.ajax({
     type: 'POST',
     url: 'https://altcademy-to-do-list-api.herokuapp.com/tasks?api_key=302',
@@ -34,6 +32,7 @@ const buildTodoList = function(tasks) {
         <input type="checkbox" class="custom-control-input" id="${task.id}">
         <label class="custom-control-label" for="${task.id}">${task.content}</label>
       </div>
+      <i class="far fa-times-circle delete"></i>
      </li>`
      html += li
   })
@@ -68,7 +67,36 @@ $('#inputBox').keypress(function(event){
   }
 })
 
+const deleteTodo = function(id) {
+  console.log(`deleteTodo`)
+  let promise = new Promise((resolve, reject) => {
+    $.ajax({
+      type: 'DELETE',
+      url: `https://altcademy-to-do-list-api.herokuapp.com/tasks/${id}?api_key=302`,
+      success: function (response, textStatus) {
+        resolve(response)
+      },
+      error: function (request, textStatus, errorMessage) {
+        console.log(errorMessage);
+      }
+    });
+  })
+  return promise
+}
+
+$('#list').on('click', '.delete', function() {
+  console.log(`delete click`)
+  let li = $(this).parent()
+  let input = li.find('input')
+  let id = input.attr('id')
+  console.log(id)
+  deleteTodo(id)
+    .then(response => {
+      console.log(response)
+      li.remove()
+    })
+})
+
 $('document').ready(function() {
-  // createTodo()
   getTodos()
 })
